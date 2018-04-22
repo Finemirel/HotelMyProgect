@@ -3,6 +3,7 @@ package com.example.hotelsApp;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+
 @SuppressWarnings("serial")
 public class Hotel implements Serializable, Cloneable {
 

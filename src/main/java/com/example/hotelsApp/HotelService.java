@@ -20,6 +20,7 @@ public class HotelService {
 
 	private HotelService() {
 	}
+	
 
 	public static HotelService getInstance() {
 		if (instance == null) {

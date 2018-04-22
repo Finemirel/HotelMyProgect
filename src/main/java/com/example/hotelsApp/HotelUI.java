@@ -48,6 +48,7 @@ public class HotelUI extends UI {
     	controller.setComponentAlignment(deleteHotel, Alignment.BOTTOM_LEFT);
     	controller.setWidth(60, Unit.PERCENTAGE);
     	
+    	
         final VerticalLayout layout = new VerticalLayout();
         setContent(layout);
         Column<Hotel, String> name = hotelGrid.addColumn(Hotel::getName);
