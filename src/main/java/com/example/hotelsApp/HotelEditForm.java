@@ -67,8 +67,6 @@ public class HotelEditForm extends FormLayout {
 
     private Converter<String, Integer> ratingConverter () {
         return new Converter<String, Integer>() {
-            private static final long serialVersionUID = 1561986299308364347L;
-
             @Override
             public Result<Integer> convertToModel (String value, ValueContext context) {
                 int parseInt = -1;
@@ -91,7 +89,6 @@ public class HotelEditForm extends FormLayout {
 
     private Converter<LocalDate, Long> dateConverter () {
         return new Converter<LocalDate, Long>() {
-            private static final long serialVersionUID = 4373291445119905756L;
 
             @Override
             public Result<Long> convertToModel (LocalDate value, ValueContext context) {
@@ -109,7 +106,6 @@ public class HotelEditForm extends FormLayout {
 
     private Validator<String> adressValidator () {
         Validator<String> adressValidator = new Validator<String>() {
-            private static final long serialVersionUID = 1206246530385327587L;
             @Override
             public ValidationResult apply (String value, ValueContext context) {
                 if (value.length() < 5) return ValidationResult.error("The adress is too short");

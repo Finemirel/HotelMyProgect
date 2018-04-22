@@ -1,7 +1,6 @@
 package com.example.hotelsApp;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 import com.vaadin.data.Result;
 
