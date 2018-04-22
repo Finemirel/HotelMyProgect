@@ -3,6 +3,7 @@ package com.example.hotelsApp;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import com.vaadin.data.Result;
 
 @SuppressWarnings("serial")
 public class Hotel implements Serializable, Cloneable {
@@ -13,11 +14,11 @@ public class Hotel implements Serializable, Cloneable {
 
 	private String address = "";
 
-	private String rating;
+	private Integer rating;
 
-	private LocalDate operatesFrom;
+	private Long operatesFrom;
 
-	private HotelCategory category;
+	private String category;
 	
 	private String url;
 	
@@ -74,27 +75,43 @@ public class Hotel implements Serializable, Cloneable {
 		this.address = address;
 	}
 
-	public String getRating() {
+	public Integer getRating() {
 		return rating;
 	}
 
-	public void setRating(String rating) {
+	public void setRating(Integer rating) {
 		this.rating = rating;
 	}
+	
+	public String getRatingString() {
+		
+		return rating.toString();
+	}
 
-	public LocalDate getOperatesFrom() {
+	public void setRatingString(String rating) {
+		Integer ratingInt = null;
+		try {
+			ratingInt = Integer.parseInt(rating);
+        } catch (NumberFormatException e) {
+            Result.error("Invalid number");
+        }
+		this.rating = ratingInt;
+	}
+
+
+	public Long getOperatesFrom() {
 		return operatesFrom;
 	}
 
-	public void setOperatesFrom(LocalDate operatesFrom) {
+	public void setOperatesFrom(Long operatesFrom) {
 		this.operatesFrom = operatesFrom;
 	}
 
-	public HotelCategory getCategory() {
+	public String getCategory() {
 		return category;
 	}
 
-	public void setCategory(HotelCategory category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}	
 
@@ -116,7 +133,7 @@ public class Hotel implements Serializable, Cloneable {
 		this.description = description;
 	}
 
-	public Hotel(Long id, String name, String address, String rating, LocalDate operatesFrom, HotelCategory category, String url, String description) {
+	public Hotel(Long id, String name, String address, Integer rating, Long operatesFrom, String category, String url, String description) {
 		super();
 		this.id = id;
 		this.name = name;

@@ -1,6 +1,7 @@
 package com.example.hotelsApp;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,13 +15,12 @@ public class HotelService {
 
 	private static HotelService instance;
 	private static final Logger LOGGER = Logger.getLogger(HotelService.class.getName());
-
+	private List<String> categories = new ArrayList<>();
 	private final HashMap<Long, Hotel> hotels = new HashMap<>();
 	private long nextId = 0;
 
 	private HotelService() {
 	}
-	
 
 	public static HotelService getInstance() {
 		if (instance == null) {
@@ -85,9 +85,25 @@ public class HotelService {
 		}
 		hotels.put(entry.getId(), entry);
 	}
+	
+	public List<String> getCategories () {
+        return categories;
+    }
+    
+    public void addCategory (String category) {
+    	categories.add(category);
+    }
+    
+    public void removeCategory (String category) {
+    	categories.remove(category);
+    }
 
 	public void ensureTestData() {
 		if (findAll().isEmpty()) {
+			for(int i = 0; i < HotelCategory.values().length; i++) {
+				categories.add(HotelCategory.values()[i].name());
+			}
+			
 			final String[] hotelData = new String[] {
 					"3 Nagas Luang Prabang - MGallery by Sofitel;4;https://www.booking.com/hotel/la/3-nagas-luang-prabang-by-accor.en-gb.html;Vat Nong Village, Sakkaline Road, Democratic Republic Lao, 06000 Luang Prabang, Laos;",
 					"Abby Boutique Guesthouse;1;https://www.booking.com/hotel/la/abby-boutique-guesthouse.en-gb.html;Ban Sawang , 01000 Vang Vieng, Laos",
@@ -118,12 +134,12 @@ public class HotelService {
 				String[] split = hotel.split(";");
 				Hotel h = new Hotel();
 				h.setName(split[0]);
-				h.setRating(split[1]);
+				h.setRating(Integer.parseInt(split[1]));
 				h.setUrl(split[2]);
 				h.setAddress(split[3]);
-				h.setCategory(HotelCategory.values()[r.nextInt(HotelCategory.values().length)]);
+				h.setCategory(categories.get((int) (Math.random() * categories.size())));
 				int daysOld = 0 - r.nextInt(365 * 30);
-				h.setOperatesFrom((LocalDate.now().plusDays(daysOld)));
+				h.setOperatesFrom((LocalDate.now().plusDays(daysOld)).getLong(ChronoField.EPOCH_DAY));
 				save(h);
 			}
 		}
