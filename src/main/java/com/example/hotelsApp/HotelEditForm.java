@@ -73,9 +73,9 @@ public class HotelEditForm extends FormLayout {
                 try {
                     parseInt = Integer.parseInt(value);
                 } catch (NumberFormatException e) {
-                    Result.error("Wrong number");
+                    Result.error("No number");
                 }
-                if (!(parseInt >= 0 && parseInt < 6)) return Result.error("value must be beetween 0 and 5 inclusive");
+                if (!(parseInt >= 0 && parseInt < 6)) return Result.error("Raiting 0 - 5");
                 return Result.ok(parseInt);
             }
 
@@ -92,7 +92,7 @@ public class HotelEditForm extends FormLayout {
 
             @Override
             public Result<Long> convertToModel (LocalDate value, ValueContext context) {
-                if (!value.isBefore(LocalDate.now())) return Result.error("Wrong date. Should be until the current moment");;
+                if (!value.isBefore(LocalDate.now())) return Result.error("Date no valid");;
                 return Result.ok(value.getLong(ChronoField.EPOCH_DAY));
             }
 
@@ -108,7 +108,7 @@ public class HotelEditForm extends FormLayout {
         Validator<String> adressValidator = new Validator<String>() {
             @Override
             public ValidationResult apply (String value, ValueContext context) {
-                if (value.length() < 5) return ValidationResult.error("The adress is too short");
+                if (value.length() < 5) return ValidationResult.error("The adress is short");
                 return ValidationResult.ok();
             }
         };
@@ -131,7 +131,7 @@ public class HotelEditForm extends FormLayout {
             ui.updateList();
             Notification.show("Hotel " + hotel.getName() + " saved", Type.TRAY_NOTIFICATION);
             exit();
-        } else Notification.show("Unable to save! please review errors and fill in all the required fields", Type.ERROR_MESSAGE);
+        } else Notification.show("Check that the fields are correct!", Type.ERROR_MESSAGE);
     }
 
     public Hotel getHotel () {

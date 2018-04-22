@@ -103,7 +103,7 @@ public class HotelUI extends UI {
         hotelGrid.setHeightUndefined();
 
         hotelGrid.setWidth(95, Unit.PERCENTAGE);
-        hotelGrid.setHeight(600, Unit.PIXELS);
+        hotelGrid.setHeight(540, Unit.PIXELS);
         
         hotelGrid.setVisible(true);
         controller(controller);

@@ -81,21 +81,6 @@ public class Hotel implements Serializable, Cloneable {
 	public void setRating(Integer rating) {
 		this.rating = rating;
 	}
-	
-	public String getRatingString() {
-		
-		return rating.toString();
-	}
-
-	public void setRatingString(String rating) {
-		Integer ratingInt = null;
-		try {
-			ratingInt = Integer.parseInt(rating);
-        } catch (NumberFormatException e) {
-            Result.error("Invalid number");
-        }
-		this.rating = ratingInt;
-	}
 
 
 	public Long getOperatesFrom() {
