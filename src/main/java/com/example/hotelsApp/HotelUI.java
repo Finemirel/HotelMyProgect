@@ -10,6 +10,7 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.ui.ValueChangeMode;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
@@ -31,7 +32,7 @@ public class HotelUI extends UI {
 	
 	final VerticalLayout layout = new VerticalLayout();
 	final HotelService hotelService = HotelService.getInstance();
-	final Grid<Hotel> grid = new Grid<>();
+	final Grid<Hotel> hotelGrid = new Grid<>();
 	final TextField filterName = new TextField("Name");
 	final TextField filterAddress = new TextField("Address");
 	final Button addHotel = new Button("Add hotel");
@@ -43,56 +44,64 @@ public class HotelUI extends UI {
     	final HorizontalLayout controller = new HorizontalLayout();
     	controller.addComponents(filterName, filterAddress, addHotel, deleteHotel);
     	deleteHotel.setEnabled(false);
-    	
+    	controller.setComponentAlignment(addHotel, Alignment.BOTTOM_CENTER);
+    	controller.setComponentAlignment(deleteHotel, Alignment.BOTTOM_LEFT);
+    	controller.setWidth(60, Unit.PERCENTAGE);
     	
         final VerticalLayout layout = new VerticalLayout();
         setContent(layout);
-        Column<Hotel, String> name = grid.addColumn(Hotel::getName);
+        Column<Hotel, String> name = hotelGrid.addColumn(Hotel::getName);
         name.setCaption("Name");
-        Column<Hotel, String> reiting = grid.addColumn(Hotel::getRating);
+        Column<Hotel, String> reiting = hotelGrid.addColumn(Hotel::getRating);
         reiting.setCaption("Reiting");
-        Column<Hotel, String> address = grid.addColumn(Hotel::getAddress);
+        Column<Hotel, String> address = hotelGrid.addColumn(Hotel::getAddress);
         address.setCaption("Address");
-        Column<Hotel, HotelCategory> category = grid.addColumn(Hotel::getCategory);
+        Column<Hotel, HotelCategory> category = hotelGrid.addColumn(Hotel::getCategory);
         category.setCaption("Category");
-        Column<Hotel, String> url = grid.addColumn(Hotel -> "<a href='" + Hotel.getUrl() + "' target='_top'>link</a>",
+        Column<Hotel, String> url = hotelGrid.addColumn(Hotel -> "<a href='" + Hotel.getUrl() + "' target='_blank'>link</a>",
         	      new HtmlRenderer());
         url.setCaption("Url");
-        Column<Hotel, Long> id = grid.addColumn(Hotel::getId);
+        Column<Hotel, Long> id = hotelGrid.addColumn(Hotel::getId);
         id.setCaption("Id");
-        Column<Hotel, LocalDate> date = grid.addColumn(Hotel::getOperatesFrom);
+        Column<Hotel, LocalDate> date = hotelGrid.addColumn(Hotel::getOperatesFrom);
         date.setCaption("Date");
-        Column<Hotel, String> description = grid.addColumn(Hotel::getDescription);
+        Column<Hotel, String> description = hotelGrid.addColumn(Hotel::getDescription);
         description.setCaption("Description");
-
-        //gdhsgsg
-        grid.setWidth(800, Unit.PIXELS);
         
-        grid.setVisible(true);
+        hotelGrid.setHeightUndefined();
+
+        hotelGrid.setWidth(95, Unit.PERCENTAGE);
+        
+        hotelGrid.setVisible(true);
         final HorizontalLayout content = new HorizontalLayout();       
         layout.addComponents(controller, content);
-        content.addComponents(grid, form);
+        content.addComponents(hotelGrid, form);
+        content.setWidth(100, Unit.PERCENTAGE);
+        content.setComponentAlignment(form, Alignment.TOP_RIGHT);
         form.setVisible(false);
+        form.setCaption("Edit / add hotel");
         
-        grid.asSingleSelect().addValueChangeListener(e -> {
+        hotelGrid.asSingleSelect().addValueChangeListener(e -> {
         	if(e.getValue()!=null){
         		deleteHotel.setEnabled(true);
         		form.setHotel(e.getValue());
         	}       	
         });
         
-        filterName.addValueChangeListener(e -> updateListForName());
+        filterName.addValueChangeListener(e -> updateList());
         filterName.setValueChangeMode(ValueChangeMode.LAZY);
         updateList();
         
-        filterAddress.addValueChangeListener(e -> updateListForAddress());
+        filterAddress.addValueChangeListener(e -> updateList());
         filterAddress.setValueChangeMode(ValueChangeMode.LAZY);
         updateList();
         
-        addHotel.addClickListener(e -> form.setHotel(new Hotel()));
+        addHotel.addClickListener(e -> {form.setHotel(new Hotel());
+            deleteHotel.setEnabled(false);
+        });
         
         deleteHotel.addClickListener(e -> {
-        	Hotel delCandidate = grid.getSelectedItems().iterator().next();
+        	Hotel delCandidate = hotelGrid.getSelectedItems().iterator().next();
         	hotelService.delete(delCandidate);
         	deleteHotel.setEnabled(false);
         	updateList();
@@ -102,21 +111,12 @@ public class HotelUI extends UI {
         
     }
     
-    public void updateListForName() {
-    	deleteHotel.setEnabled(false);
-    	List<Hotel> hotelList = hotelService.findName(filterName.getValue());
-    	grid.setItems(hotelList);
-    }
-    
-    public void updateListForAddress() {
-    	deleteHotel.setEnabled(false);
-    	List<Hotel> hotelList = hotelService.findAddress(filterAddress.getValue());
-    	grid.setItems(hotelList);
-    }
-    
     public void updateList() {
-		grid.setItems(hotelService.findAll());	
-	}
+    	deleteHotel.setEnabled(false);
+    	List<Hotel> hotelList = hotelService.findAll(filterName.getValue(), filterAddress.getValue());
+    	hotelGrid.setItems(hotelList);
+    }
+    
 
     @WebServlet(urlPatterns = "/*", name = "HotelUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = HotelUI.class, productionMode = false)

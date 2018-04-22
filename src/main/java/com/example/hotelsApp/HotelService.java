@@ -30,16 +30,16 @@ public class HotelService {
 	}
 
 	public synchronized List<Hotel> findAll() {
-		return findAll(null);
+		return findAll(null, null);
 	}
 
-	public synchronized List<Hotel> findAll(String stringFilter) {
+	public synchronized List<Hotel> findAll(String filterName, String filterAddress) {
 		ArrayList<Hotel> arrayList = new ArrayList<>();
 		for (Hotel hotel : hotels.values()) {
 			try {
-				boolean passesFilter = (stringFilter == null || stringFilter.isEmpty())
-						|| hotel.toString().toLowerCase().contains(stringFilter.toLowerCase());
-				if (passesFilter) {
+				boolean passesName = passesFilter (filterName, hotel.getName());
+				boolean passesAddress = passesFilter (filterAddress, hotel.getAddress());
+				if (passesName&&passesAddress) {
 					arrayList.add(hotel.clone());
 				}
 			} catch (CloneNotSupportedException ex) {
@@ -56,135 +56,10 @@ public class HotelService {
 		return arrayList;
 	}
 	
-	public synchronized List<Hotel> findName(String stringFilter) {
-		ArrayList<Hotel> arrayList = new ArrayList<>();
-		for (Hotel hotel : hotels.values()) {
-			try {
-				boolean passesFilter = (stringFilter == null || stringFilter.isEmpty())
-						|| hotel.getName().toLowerCase().contains(stringFilter.toLowerCase());
-				if (passesFilter) {
-					arrayList.add(hotel.clone());
-				}
-			} catch (CloneNotSupportedException ex) {
-				Logger.getLogger(HotelService.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		Collections.sort(arrayList, new Comparator<Hotel>() {
-
-			@Override
-			public int compare(Hotel o1, Hotel o2) {
-				return (int) (o2.getId() - o1.getId());
-			}
-		});
-		return arrayList;
+	private boolean passesFilter(String typeFilter, String typeValues){
+		return (typeFilter == null || typeFilter.isEmpty())|| typeValues.toLowerCase().contains(typeFilter.toLowerCase());
 	}
 	
-	public synchronized List<Hotel> findAddress(String stringFilter) {
-		ArrayList<Hotel> arrayList = new ArrayList<>();
-		for (Hotel hotel : hotels.values()) {
-			try {
-				boolean passesFilter = (stringFilter == null || stringFilter.isEmpty())
-						|| hotel.getAddress().toLowerCase().contains(stringFilter.toLowerCase());
-				if (passesFilter) {
-					arrayList.add(hotel.clone());
-				}
-			} catch (CloneNotSupportedException ex) {
-				Logger.getLogger(HotelService.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		Collections.sort(arrayList, new Comparator<Hotel>() {
-
-			@Override
-			public int compare(Hotel o1, Hotel o2) {
-				return (int) (o2.getId() - o1.getId());
-			}
-		});
-		return arrayList;
-	}
-
-
-
-	
-	public synchronized List<Hotel> findAll(String stringFilter, int start, int maxresults) {
-		ArrayList<Hotel> arrayList = new ArrayList<>();
-		for (Hotel contact : hotels.values()) {
-			try {
-				boolean passesFilter = (stringFilter == null || stringFilter.isEmpty())
-						|| contact.toString().toLowerCase().contains(stringFilter.toLowerCase());
-				if (passesFilter) {
-					arrayList.add(contact.clone());
-				}
-			} catch (CloneNotSupportedException ex) {
-				Logger.getLogger(HotelService.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		Collections.sort(arrayList, new Comparator<Hotel>() {
-
-			@Override
-			public int compare(Hotel o1, Hotel o2) {
-				return (int) (o2.getId() - o1.getId());
-			}
-		});
-		int end = start + maxresults;
-		if (end > arrayList.size()) {
-			end = arrayList.size();
-		}
-		return arrayList.subList(start, end);
-	}
-	
-	public synchronized List<Hotel> findName(String stringFilter, int start, int maxresults) {
-		ArrayList<Hotel> arrayList = new ArrayList<>();
-		for (Hotel contact : hotels.values()) {
-			try {
-				boolean passesFilter = (stringFilter == null || stringFilter.isEmpty())
-						|| contact.getName().toLowerCase().contains(stringFilter.toLowerCase());
-				if (passesFilter) {
-					arrayList.add(contact.clone());
-				}
-			} catch (CloneNotSupportedException ex) {
-				Logger.getLogger(HotelService.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		Collections.sort(arrayList, new Comparator<Hotel>() {
-
-			@Override
-			public int compare(Hotel o1, Hotel o2) {
-				return (int) (o2.getId() - o1.getId());
-			}
-		});
-		int end = start + maxresults;
-		if (end > arrayList.size()) {
-			end = arrayList.size();
-		}
-		return arrayList.subList(start, end);
-	}
-	
-	public synchronized List<Hotel> findAddress(String stringFilter, int start, int maxresults) {
-		ArrayList<Hotel> arrayList = new ArrayList<>();
-		for (Hotel contact : hotels.values()) {
-			try {
-				boolean passesFilter = (stringFilter == null || stringFilter.isEmpty())
-						|| contact.getAddress().toLowerCase().contains(stringFilter.toLowerCase());
-				if (passesFilter) {
-					arrayList.add(contact.clone());
-				}
-			} catch (CloneNotSupportedException ex) {
-				Logger.getLogger(HotelService.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		Collections.sort(arrayList, new Comparator<Hotel>() {
-
-			@Override
-			public int compare(Hotel o1, Hotel o2) {
-				return (int) (o2.getId() - o1.getId());
-			}
-		});
-		int end = start + maxresults;
-		if (end > arrayList.size()) {
-			end = arrayList.size();
-		}
-		return arrayList.subList(start, end);
-	}
 
 	public synchronized long count() {
 		return hotels.size();
